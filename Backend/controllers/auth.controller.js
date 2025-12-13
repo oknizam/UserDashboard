@@ -44,7 +44,16 @@ const login = async (req, res) => {
 const logout = (req, res) => {
   try {
     const { uuid } = req.cookies;
-    deleteSession(uuid);
+
+    if (!isStateLessValidation()) {
+      deleteSession(uuid);
+    }
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/"
+    });
     return res.status(200).json({ "responseText": "User logged out....!" });
   }
   catch (err) {

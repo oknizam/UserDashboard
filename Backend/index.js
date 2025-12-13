@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const usersRouter = require("./routes/users.router");
 const { logMiddleWare } = require("./middlewares/logs");
 const postRouter = require("./routes/posts.router");
@@ -10,6 +11,11 @@ const authRouter = require("./routes/auth.router");
 const app = express();
 
 connectMongo("mongodb://localhost:27017/Learning")
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -27,7 +27,12 @@ const login = async (req, res) => {
     if (!response) return res.status(200).json({ "responseText": "Invalid User....!" });
     const sessionId = v4();
     setSession(sessionId, response);
-    res.cookie("uid", sessionId);
+
+    res.cookie("uuid", sessionId, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false
+    });
     return res.status(200).json(response)
   }
   catch (err) {
@@ -38,13 +43,14 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
   try {
-    const { sessionId } = req.body;
-    deleteSession(sessionId);
+    const { uuid } = req.cookies;
+    console.log("uuid", uuid, abc)
+    deleteSession(uuid);
     return res.status(200).json({ "responseText": "User logged out....!" });
   }
   catch (err) {
     console.log("err", err)
-    return res.status(400).json({ "responseText": "Bad request....!" })
+    return res.status(500).json({ "responseText": "Internal server error!" })
   }
 }
 

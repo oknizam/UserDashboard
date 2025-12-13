@@ -11,3 +11,5 @@
   a. With basic username:password base64 encoded format
 
     Authorization : Basic nizam:1234 base64(nizam:1234) => BMshdkk2244== 
+
+5. We can also do Authorization in browser storing token in local storage

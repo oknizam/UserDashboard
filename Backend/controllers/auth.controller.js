@@ -1,6 +1,7 @@
 const { userModel } = require("../model/user.model.js");
-const { v4 } = require("uuid");
-const { setSession, deleteSession } = require("../services/authSessionService.js");
+const { createSessionId, deleteSession } = require("../services/authSessionService.js");
+const { isStateLessValidation } = require("../services/common.js");
+const { createJwtTokenForUser } = require("../services/jwtTokenService.js");
 
 
 const signUp = async (req, res) => {
@@ -25,10 +26,9 @@ const login = async (req, res) => {
       email, password
     })
     if (!response) return res.status(200).json({ "responseText": "Invalid User....!" });
-    const sessionId = v4();
-    setSession(sessionId, response);
 
-    res.cookie("uuid", sessionId, {
+    const token = isStateLessValidation() ? createJwtTokenForUser(response) : createSessionId(response);
+    res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
       secure: false
@@ -44,7 +44,6 @@ const login = async (req, res) => {
 const logout = (req, res) => {
   try {
     const { uuid } = req.cookies;
-    console.log("uuid", uuid, abc)
     deleteSession(uuid);
     return res.status(200).json({ "responseText": "User logged out....!" });
   }

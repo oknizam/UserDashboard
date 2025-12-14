@@ -18,7 +18,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
@@ -26,7 +26,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
     setIsLoading(true);
     try {
-      const user = await authService.login({ email });
+      const user = await authService.login({ email, password });
       onLoginSuccess(user);
     } catch (err) {
       setError('Invalid credentials. Please try again.');
@@ -43,7 +43,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             <Users className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
-          <p className="text-slate-500 mt-2">Sign in to your TeamSync account</p>
+          <p className="text-slate-500 mt-2">Sign in to your PeoplePanel account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -56,7 +56,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
           />
-          
+
           <Input
             id="password"
             type="password"
@@ -69,13 +69,13 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
           {error && (
             <div className="p-3 bg-red-50 border border-red-100 rounded-lg flex items-start">
-               <div className="text-sm text-red-600">{error}</div>
+              <div className="text-sm text-red-600">{error}</div>
             </div>
           )}
 
-          <Button 
-            type="submit" 
-            className="w-full" 
+          <Button
+            type="submit"
+            className="w-full"
             isLoading={isLoading}
             icon={<Lock className="w-4 h-4" />}
           >

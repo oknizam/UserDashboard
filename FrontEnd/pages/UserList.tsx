@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User } from '../types';
+import { User, UsersResponse } from '../types';
 import { authService } from '../services/authService';
 import { UserCard } from '../components/UserCard';
 import { Button } from '../components/Button';
@@ -23,7 +23,7 @@ export const UserList: React.FC<UserListProps> = ({ currentUser, onLogout }) => 
     setLoading(true);
     try {
       const data = await authService.getUsers();
-      setUsers(data);
+      setUsers(data.users);
     } catch (error) {
       console.error('Failed to fetch users', error);
     } finally {
@@ -31,7 +31,7 @@ export const UserList: React.FC<UserListProps> = ({ currentUser, onLogout }) => 
     }
   };
 
-  const filteredUsers = users.filter(user => 
+  const filteredUsers = users.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.role.toLowerCase().includes(searchTerm.toLowerCase())
@@ -39,30 +39,29 @@ export const UserList: React.FC<UserListProps> = ({ currentUser, onLogout }) => 
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Navigation Bar */}
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center text-indigo-600">
                 <Users className="w-8 h-8" />
-                <span className="ml-2 text-xl font-bold text-slate-900 tracking-tight">TeamSync</span>
+                <span className="ml-2 text-xl font-bold text-slate-900 tracking-tight">People Panel</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="hidden sm:flex items-center space-x-3 pr-4 border-r border-slate-200">
-                <img 
-                  src={currentUser.avatarUrl} 
-                  alt={currentUser.name} 
+                {/* <img
+                  src={currentUser?.avatarUrl}
+                  alt={currentUser.name}
                   className="w-8 h-8 rounded-full ring-2 ring-slate-100"
-                />
+                /> */}
                 <div className="text-sm">
                   <p className="font-medium text-slate-900">{currentUser.name}</p>
-                  <p className="text-slate-500 text-xs">{currentUser.role}</p>
+                  <p className="text-slate-500 text-xs">{currentUser?.role}</p>
                 </div>
               </div>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 onClick={onLogout}
                 icon={<LogOut className="w-4 h-4" />}
               >
@@ -75,7 +74,7 @@ export const UserList: React.FC<UserListProps> = ({ currentUser, onLogout }) => 
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
           <div>
@@ -83,9 +82,9 @@ export const UserList: React.FC<UserListProps> = ({ currentUser, onLogout }) => 
             <p className="mt-1 text-sm text-slate-500">Manage and view your team directory</p>
           </div>
           <div className="flex items-center space-x-3">
-             <Button variant="secondary" onClick={loadUsers} icon={<RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />}>
-               Refresh
-             </Button>
+            <Button variant="secondary" onClick={loadUsers} icon={<RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />}>
+              Refresh
+            </Button>
           </div>
         </div>
 

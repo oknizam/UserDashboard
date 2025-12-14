@@ -18,19 +18,25 @@ function App() {
   };
 
   const handleLogout = async () => {
-    await authService.logout();
-    setAuth({
-      isAuthenticated: false,
-      currentUser: null,
-    });
+    try {
+      await authService.logout();
+      setAuth({
+        isAuthenticated: false,
+        currentUser: null,
+      });
+    }
+    catch (err) {
+      console.error("error", err)
+    }
+
   };
 
   return (
     <>
       {auth.isAuthenticated && auth.currentUser ? (
-        <UserList 
-          currentUser={auth.currentUser} 
-          onLogout={handleLogout} 
+        <UserList
+          currentUser={auth.currentUser}
+          onLogout={handleLogout}
         />
       ) : (
         <Login onLoginSuccess={handleLoginSuccess} />

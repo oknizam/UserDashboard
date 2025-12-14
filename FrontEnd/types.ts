@@ -15,4 +15,11 @@ export interface AuthState {
 
 export interface LoginCredentials {
   email: string;
+  password: string
+}
+
+// Interface for the full response
+export interface UsersResponse {
+  count: number;
+  users: User[];
 }

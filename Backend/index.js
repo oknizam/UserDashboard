@@ -1,4 +1,6 @@
 const express = require("express");
+const dotenv = require("dotenv");
+dotenv.config();
 const cors = require("cors");
 const usersRouter = require("./routes/users.router");
 const { logMiddleWare } = require("./middlewares/logs");
@@ -10,7 +12,9 @@ const authRouter = require("./routes/auth.router");
 
 const app = express();
 
-connectMongo("mongodb://localhost:27017/Learning")
+const PORT = process.env.PORT;
+
+connectMongo(process.env.MONGODB_URL)
 
 app.use(cors({
   origin: "http://localhost:5173",
@@ -27,6 +31,6 @@ app.use("/users", validateUserInSession, usersRouter)
 app.use("/posts", validateUserInSession, postRouter) //inline middleware
 
 
-app.listen(3000, () => {
-  console.log("listening to port 3000")
+app.listen(PORT, () => {
+  console.log(`listening to port ${PORT}`)
 })
